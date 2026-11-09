@@ -3,6 +3,7 @@
 #include <emp-tool/emp-tool.h>
 #include "src/3pc/utils/types.h"
 #include <cerrno>
+#include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
@@ -109,16 +110,14 @@ class Net3P {
 
   /// Send `count` ring elements of type T to party `to`.
   template <typename T>
-  void send_ring(const T* data, size_t count, int to) {
-    bytes_sent_[to] += count * sizeof(T);
-    send_io(to)->send_data(data, count * sizeof(T));
+  void send_ring(const T* data, uint64_t count, int to) {
+    send_bytes(data, emp::checked_io_bytes(count, sizeof(T)), to);
   }
 
   /// Receive `count` ring elements of type T from party `from` into `data`.
   template <typename T>
-  void recv_ring(T* data, size_t count, int from) {
-    bytes_recv_[from] += count * sizeof(T);
-    recv_io(from)->recv_data(data, count * sizeof(T));
+  void recv_ring(T* data, uint64_t count, int from) {
+    recv_bytes(data, emp::checked_io_bytes(count, sizeof(T)), from);
   }
 
   /// Send a single ring element to party `to`.
@@ -136,11 +135,13 @@ class Net3P {
   }
 
   // ── Raw byte send / recv ─────────────────────────────────────────────────────
-  void send_bytes(const void* data, size_t len, int to) {
+  void send_bytes(const void* data, uint64_t len, int to) {
+    emp::checked_io_size(len);
     bytes_sent_[to] += len;
     send_io(to)->send_data(data, len);
   }
-  void recv_bytes(void* data, size_t len, int from) {
+  void recv_bytes(void* data, uint64_t len, int from) {
+    emp::checked_io_size(len);
     bytes_recv_[from] += len;
     recv_io(from)->recv_data(data, len);
   }

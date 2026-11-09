@@ -78,7 +78,7 @@ Arithmetic is performed using native unsigned 8-, 16-, 32-, or 64-bit types. Ove
 ## Repository structure
 
 ```text
-CrIS-MPC/
+DynamicGraph/
 ├── src/
 │   ├── common/
 │   │   ├── circuit/           # Gates, circuit construction, and level ordering
@@ -201,8 +201,8 @@ builds the same local static library on Ubuntu 22.04, without installing EMP:
 
 ```bash
 git submodule update --init --recursive
-docker build -t cris-mpc .
-docker run --rm -it cris-mpc
+docker build -t DynamicGraph .
+docker run --rm -it DynamicGraph
 ```
 
 The image starts a shell in `/workspace`; programs are in `/workspace/build/`.
@@ -343,7 +343,7 @@ Results/<benchmark>/protocol_<protocol>/parties_<n>/<workload>/<timestamp>/
 Set `RESULTS_DIR` to change the base directory:
 
 ```bash
-RESULTS_DIR=/tmp/cris-mpc-results ./run.sh bench_gate \
+RESULTS_DIR=/tmp/DynamicGraph-results ./run.sh bench_gate \
   --gate add --x 10 --y 20 --vec-size 1000
 ```
 
@@ -357,7 +357,7 @@ See [test/README.md](test/README.md) for all targets, process counts, and launch
 
 ## Security model
 
-CrIS-MPC targets semi-honest adversaries i.e. parties are assumed to follow the protocol but may inspect their local views. RSS3 targets at most one corrupted compute party among three. NPH targets up to `n-1` corrupted compute parties, with a dedicated preprocessing helper that must not collude with the compute parties. The code is intended for research and experimental benchmarking and has not been independently audited for production use.
+DynamicGraph targets semi-honest adversaries i.e. parties are assumed to follow the protocol but may inspect their local views. RSS3 targets at most one corrupted compute party among three. NPH targets up to `n-1` corrupted compute parties, with a dedicated preprocessing helper that must not collude with the compute parties. The code is intended for research and experimental benchmarking and has not been independently audited for production use.
 
 ## License
 

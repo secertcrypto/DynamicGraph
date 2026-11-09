@@ -1,4 +1,4 @@
-# Stateful dynamic graph computation on CrIS-MPC
+# Stateful dynamic graph computation on DynamicGraph
 
 This runtime implements Init, Insert and Iter on a fixed vertex set. Its
 `Config::two_party=true` backend runs only P0/P1, including initialization,
@@ -23,7 +23,7 @@ Two-party setup/OT costs are included in the operation that executes them.
 
 ## Build and try the public demo
 
-Run from the CrIS-MPC repository root with local EMP populated:
+Run from the DynamicGraph repository root with local EMP populated:
 
 ```sh
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCRIS_BUILD_RISA_READ=ON
@@ -158,7 +158,7 @@ tests are small-graph regressions, not a scalability benchmark or a formal
 security proof. The secure-init implementation uses the existing MPC sort
 rather than claiming a verbatim implementation/cost of the paper's Init.
 
-Verification on the CrIS-MPC port: 144 secure decode boundary cases (including
+Verification on the DynamicGraph port: 144 secure decode boundary cases (including
 ell=63 and ring wrap); independent share shifts without the carry would fail
 60 cases. Four real three-process fixtures covered 13 successive rounds in
 total, verifying every vertex against a cleartext oracle with **zero modular

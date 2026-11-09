@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local two- or three-process benchmark for the real CrIS-MPC dynamic graph engine."""
+"""Local two- or three-process benchmark for the real DynamicGraph dynamic graph engine."""
 import argparse
 import csv
 import datetime as dt

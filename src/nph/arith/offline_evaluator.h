@@ -1389,10 +1389,10 @@ class OfflineEvaluator {
         static_cast<size_t>(num_compute_parties_));
     std::vector<T> received_missing_delta;
     std::vector<T> received_two_party_mask;
-    std::vector<size_t> received_two_party_perm;
+    std::vector<uint64_t> received_two_party_perm;
     std::vector<T> two_party_mask_p0;
     std::vector<T> two_party_mask_p1;
-    std::vector<size_t> two_party_perm_p1;
+    std::vector<uint64_t> two_party_perm_p1;
 
     if (is_helper()) {
       for (int p = 0; p < num_compute_parties_; ++p) {
@@ -1417,7 +1417,7 @@ class OfflineEvaluator {
                           helper);
         if (pid_ == 1) {
           received_two_party_perm.resize(two_party_optimized_elems);
-          net_.recv_ring<size_t>(received_two_party_perm.data(),
+          net_.recv_ring<uint64_t>(received_two_party_perm.data(),
                                  received_two_party_perm.size(),
                                  helper);
         }
@@ -1577,6 +1577,10 @@ class OfflineEvaluator {
                 *twoPartyAuxPermutationForGate(
                     gate, inverse, perm_cache, fresh_group);
           } else {
+            for (size_t j = 0; j < n; ++j) {
+              if (received_two_party_perm[received_two_party_perm_offset + j] >= n)
+                throw std::runtime_error("NPH shuffle: permutation index out of range");
+            }
             pp.two_party_aux_perm.assign(
                 received_two_party_perm.begin() +
                     static_cast<std::ptrdiff_t>(received_two_party_perm_offset),
@@ -1629,7 +1633,7 @@ class OfflineEvaluator {
         net_.flush(1);
       }
       if (!two_party_perm_p1.empty()) {
-        net_.send_ring<size_t>(two_party_perm_p1.data(), two_party_perm_p1.size(), 1);
+        net_.send_ring<uint64_t>(two_party_perm_p1.data(), two_party_perm_p1.size(), 1);
         net_.flush(1);
       }
     }

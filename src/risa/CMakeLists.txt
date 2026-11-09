@@ -1,4 +1,4 @@
-# Both CrIS-MPC and SFSS use the same local EMP target.
+# Both DynamicGraph and SFSS use the same local EMP target.
 add_library(cris_sfssgen STATIC ../sfssgen/dpf.cpp)
 target_include_directories(cris_sfssgen PUBLIC
     ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/src/sfssgen/vendor)

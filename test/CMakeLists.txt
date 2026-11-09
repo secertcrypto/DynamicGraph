@@ -38,3 +38,7 @@ endif()
 if(TARGET DynamicGraph::engine)
   add_subdirectory(dynamic_graph)
 endif()
+
+add_executable(test_network_u64 test_network_u64.cpp)
+target_link_libraries(test_network_u64 PRIVATE emp-tool::emp-tool)
+add_test(NAME network_u64 COMMAND test_network_u64)

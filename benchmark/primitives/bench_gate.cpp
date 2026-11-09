@@ -1,6 +1,6 @@
 // benchmark/primitives/bench_gate.cpp
 //
-// Protocol-flexible single-gate benchmark for CRiS-MPC.
+// Protocol-flexible single-gate benchmark for DynamicGraph.
 //
 // Supported gates:
 //   add   -> kAdd

@@ -1,4 +1,4 @@
-# RISA.Read in CrIS-MPC
+# RISA.Read in DynamicGraph
 
 RISA returns additive uint64 shares. With honest PIR recovery their sum is
 exactly D[(sigma_0+sigma_1) mod N] in Z/(2^64). Existing Update, UpdateBatch
@@ -7,9 +7,9 @@ error; Read does not introduce that rounding error.
 
 ## Build and run
 
-Apply this patch **after** the CrIS-MPC graph module, local EMP and batch
+Apply this patch **after** the DynamicGraph graph module, local EMP and batch
 update patches. It includes the Spiral, HEXL and cpu_features sources and
-licenses. No HEXL system installation is required. From the CrIS-MPC root:
+licenses. No HEXL system installation is required. From the DynamicGraph root:
 
 ```sh
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCRIS_BUILD_RISA_READ=ON

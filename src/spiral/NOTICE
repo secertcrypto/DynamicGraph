@@ -19,6 +19,6 @@ CPU Features: https://github.com/google/cpu_features
 v0.6.0, commit a8397ba4591237c17d18e4acc091f5f3ebe7391e
 Apache-2.0; upstream license retained in third_party/cpu_features.
 
-CrIS-MPC port: added fixed-width communication frames for public matrices,
+DynamicGraph port: added fixed-width communication frames for public matrices,
 encrypted queries, and responses; cached peer public matrices across queries.
 No secret-key or plaintext index serialization is provided.

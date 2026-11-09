@@ -1,4 +1,4 @@
-# Spiral uint64 PIR for CrIS-MPC
+# Spiral uint64 PIR for DynamicGraph
 
 Source: secertcrypto/dynamic-secure-graph at bf89198, src/spiral. Upstream
 versions, authors and licenses are in NOTICE, AUTHORS and LICENSE. See

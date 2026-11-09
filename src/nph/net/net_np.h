@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cerrno>
+#include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
@@ -81,17 +82,13 @@ class NetNP {
   int numParties() const { return total_parties_; }
 
   template <typename T>
-  void send_ring(const T* data, size_t count, int to) {
-    check_peer(to);
-    bytes_sent_[static_cast<size_t>(to)] += count * sizeof(T);
-    send_ios_[static_cast<size_t>(to)]->send_data(data, count * sizeof(T));
+  void send_ring(const T* data, uint64_t count, int to) {
+    send_bytes(data, emp::checked_io_bytes(count, sizeof(T)), to);
   }
 
   template <typename T>
-  void recv_ring(T* data, size_t count, int from) {
-    check_peer(from);
-    bytes_recv_[static_cast<size_t>(from)] += count * sizeof(T);
-    recv_ios_[static_cast<size_t>(from)]->recv_data(data, count * sizeof(T));
+  void recv_ring(T* data, uint64_t count, int from) {
+    recv_bytes(data, emp::checked_io_bytes(count, sizeof(T)), from);
   }
 
   template <typename T>
@@ -106,13 +103,15 @@ class NetNP {
     return val;
   }
 
-  void send_bytes(const void* data, size_t len, int to) {
+  void send_bytes(const void* data, uint64_t len, int to) {
+    emp::checked_io_size(len);
     check_peer(to);
     bytes_sent_[static_cast<size_t>(to)] += len;
     send_ios_[static_cast<size_t>(to)]->send_data(data, len);
   }
 
-  void recv_bytes(void* data, size_t len, int from) {
+  void recv_bytes(void* data, uint64_t len, int from) {
+    emp::checked_io_size(len);
     check_peer(from);
     bytes_recv_[static_cast<size_t>(from)] += len;
     recv_ios_[static_cast<size_t>(from)]->recv_data(data, len);
@@ -160,14 +159,14 @@ class NetNP {
    * cold congestion window. Byte counters are not affected — call
    * resetCounters() after this if a clean slate is desired.
    */
-  void warmup(size_t bytes_per_peer, int peer_limit) {
+  void warmup(uint64_t bytes_per_peer, int peer_limit) {
     if (bytes_per_peer == 0) return;
     if (peer_limit < 0 || peer_limit > total_parties_)
       throw std::invalid_argument("NetNP::warmup: invalid peer_limit");
     if (pid_ >= peer_limit) return;
 
-    std::vector<uint8_t> send_buf(bytes_per_peer, 0);
-    std::vector<uint8_t> recv_buf(bytes_per_peer);
+    std::vector<uint8_t> send_buf(emp::checked_io_size(bytes_per_peer), 0);
+    std::vector<uint8_t> recv_buf(emp::checked_io_size(bytes_per_peer));
 
     // Avoid deadlock on large warmups: a global "send-all then recv-all"
     // pattern can block once socket buffers fill. Use a deterministic pairwise

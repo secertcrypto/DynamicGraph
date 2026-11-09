@@ -1,4 +1,4 @@
-# Benchmarks for CRiS-MPC/3pc
+# Benchmarks for DynamicGraph/3pc
 
 find_package(OpenMP)
 
@@ -56,9 +56,6 @@ if(TARGET Graphiti::init2pc)
   target_link_libraries(bench_InitGraphiti2pc PRIVATE graphiti_benchmark_common)
   target_compile_options(bench_InitGraphiti2pc PRIVATE -mpclmul)
 endif()
-add_benchmark(bench_PrMpaGraSP ${CMAKE_SOURCE_DIR}/benchmark/grasp/bench_PrMpaGraSP.cpp)
-add_benchmark(RiskPropagation ${CMAKE_SOURCE_DIR}/benchmark/grasp/RiskPropagation.cpp)
-add_benchmark(GroupConnection ${CMAKE_SOURCE_DIR}/benchmark/grasp/GroupConnection.cpp)
 add_benchmark(bench_sort)
 
 if(TARGET RISA::read)

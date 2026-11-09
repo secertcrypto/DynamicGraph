@@ -1,6 +1,6 @@
-# CrIS-MPC RISA batch update
+# DynamicGraph RISA batch update
 
-This port lives in CrIS-MPC. It uses its existing EMP target and Graphiti
+This port lives in DynamicGraph. It uses its existing EMP target and Graphiti
 module. The ordinary full-tree distributed DPF, LWR KH-PRF and vendored OT
 sources in ../sfssgen are from secertcrypto/dynamic-secure-graph at bf89198;
 see ../sfssgen/LICENSE, NOTICE and vendor/emp-ot/LICENSE. The backend adapter
@@ -50,7 +50,7 @@ operations may amplify errors. The test suite checks correctness, not privacy.
 
 ## Build and run
 
-Use the CrIS-MPC revision with the Graphiti module and local EMP patches.
+Use the DynamicGraph revision with the Graphiti module and local EMP patches.
 From its repository root (EMP 0.2.5 populated in third_party/emp-tool):
 
 ```sh

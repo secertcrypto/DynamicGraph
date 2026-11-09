@@ -17,8 +17,8 @@ class CountedIO : public emp::IOChannel<CountedIO> {
 public:
     std::uint64_t received=0;
     explicit CountedIO(emp::NetIO& io):io_(io){}
-    void send_data_internal(const void* data,std::size_t n){io_.send_data(data,n);}
-    void recv_data_internal(void* data,std::size_t n){io_.recv_data(data,n);received+=n;}
+    void send_data_internal(const void* data,std::uint64_t n){io_.send_data(data,n);}
+    void recv_data_internal(void* data,std::uint64_t n){io_.recv_data(data,n);received+=n;}
     void flush(){io_.flush();}
 };
 
