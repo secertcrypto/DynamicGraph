@@ -1,0 +1,24 @@
+Upstream sources and fixed revisions:
+
+Spiral: https://github.com/menonsamir/spiral
+commit 361ee47f92214d4fcd03c4205c9c2729e8369afb
+MIT License, Copyright (c) 2022 Samir Jordan Menon and David J. Wu
+and contributors. License and AUTHORS are preserved under upstream/.
+Adaptations: extraction of conversion primitives, namespace isolation,
+RAII MatPoly ownership, random source replacement, safe gadget shifts,
+new uint64 block codec and separated client/server orchestration.
+The added adapter is provided under the same MIT license (see LICENSE).
+
+Intel HEXL: https://github.com/intel/hexl
+v1.2.1, commit df6c26fdd2f2752e2bfa17981be113ff32946375
+Apache-2.0; upstream license retained in third_party/hexl.
+Local modification: CMake uses the adjacent pinned cpu_features sources
+rather than fetching master. Parent build options are preserved.
+
+CPU Features: https://github.com/google/cpu_features
+v0.6.0, commit a8397ba4591237c17d18e4acc091f5f3ebe7391e
+Apache-2.0; upstream license retained in third_party/cpu_features.
+
+CrIS-MPC port: added fixed-width communication frames for public matrices,
+encrypted queries, and responses; cached peer public matrices across queries.
+No secret-key or plaintext index serialization is provided.

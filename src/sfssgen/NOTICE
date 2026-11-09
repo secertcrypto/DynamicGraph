@@ -1,0 +1,31 @@
+Dealerless DPF minimal port
+
+Derived algorithm: ordinary full-GGM keyGenDPF/evalDPF and related helpers from
+https://github.com/xingpz2008/dealerless-FSS_public
+commit e8fefb537253ee5b0317ea484c934656f09a66f5
+Copyright (c) 2024 Pengzhi Xing. Licensed under Apache-2.0 (LICENSE).
+
+Modifications: reduced to 64-bit arithmetic DPF; replaced cryptoTools block/AES
+with EMP; replaced SCI multiplexer/comms with two-direction IKNP OT sharing
+adapters; added an OT-based ripple-carry arithmetic-to-Boolean converter;
+removed globals and unrelated applications; added two-process correctness tests.
+This is an adapted extraction, not an unchanged copy or a performance-equivalent
+implementation of the upstream backend.
+
+Bundled EMP-OT files: ot.h, cot.h, co.h, iknp.h, unchanged from tag 0.2.4,
+commit d5f4fc89433c1e391de16c209bcca1a08755507b.
+Copyright (c) 2018 Xiao Wang. MIT license in vendor/emp-ot/LICENSE.
+
+EMP-Tool is an external local dependency, not included in this archive.
+
+2026-09-21 extension: shared-tree two-coordinate additive uint64 payloads,
+domain-separated leaf PRF conversion, and pruned public-prefix evaluation.
+The user's supplied evalAll cGGM/ET code informed traversal design; ordinary
+GGM expansion and correction semantics are retained. This is not a KH-PRF
+implementation or a complete RSIA.Update protocol.
+
+LWR extension: independently implemented the inner-product/high-bit truncation
+structure inspected in CPS4AI/OpenSFSS sfss.h at
+9f7d3dafec3865a6f815f9ad1974d9291192d4e4. Uses EMP CRH, 512 coefficients in
+Z/(2^128), and output in Z/(2^64). Adds product-group DPF payloads and 128-bit
+OT MUX. This implements approximate key homomorphism, not exact RSIA.Update.
