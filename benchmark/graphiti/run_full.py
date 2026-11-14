@@ -35,8 +35,8 @@ def options(rebuild=False):
         group.add_argument("--insert-per-round",type=int,help="default 1")
         group.add_argument("--insert-schedule",help="comma-separated counts, e.g. 0,2,0,1")
         group.add_argument("--insert-file",type=Path,help="public per-round [id,src,dst,weight] lists")
-        p.add_argument("--reinit-policy",choices=["every_round","on_insert"],default="every_round",
-                       help="every_round also rebuilds on empty batches; on_insert reuses unchanged topology")
+        p.add_argument("--reinit-policy",choices=["every_round","on_insert"],default="on_insert",
+                       help="default on_insert skips empty batches; every_round explicitly forces a rebuild each round")
     p.add_argument("--shift",type=int,default=0,
                    help="0 selects ell from max-delta; value ring is Z_(2^(64-ell)), not fixed-point")
     p.add_argument("--seed",type=int,default=42)
@@ -86,7 +86,7 @@ def main(rebuild=False):
         d=Path(tmp);common.prepare(a,d,initial,base,rounds,cap,q)
         for party in range(2):
             path=d/f"in-{party}.json";content=json.loads(path.read_text())
-            content.update(graphiti_mode=a.graphiti_mode,reinit_policy=a.reinit_policy or "every_round")
+            content.update(graphiti_mode=a.graphiti_mode,reinit_policy=a.reinit_policy or "on_insert")
             path.write_text(json.dumps(content,separators=(",",":")))
         for rep in range(-a.warmup,a.repeat):
             logs=out/f"trial-{rep}";logs.mkdir()

@@ -29,13 +29,14 @@ def main():
             fingerprints=[]
             shared=["--vertices","5","--base-edges","3","--insert-file",str(inserts),
                     "--max-delta","3","--shift","4","--application",app,"--seed","42","--check"]
-            for policy in ("every_round","on_insert"):
-                out=folder/f"{app}-{policy}"
+            for policy in (None,"on_insert","every_round"):
+                out=folder/f"{app}-{policy or 'default'}"
+                policy_args=[] if policy is None else ["--reinit-policy",policy]
                 subprocess.run([sys.executable,str(launcher),"--binary",str(args.binary),
-                    *shared,"--repeat","2","--warmup","1","--reinit-policy",policy,
+                    *shared,"--repeat","2","--warmup","1",*policy_args,
                     "--port","22800","--out",str(out)],check=True,timeout=120)
                 meta=json.loads((out/"metadata.json").read_text())
-                assert meta["correctness_checked"] and meta["reinit_policy"]==policy
+                assert meta["correctness_checked"] and meta["reinit_policy"]==(policy or "on_insert")
                 assert meta["insert_schedule"]==[0,2,0,1] and meta["state_policy"]=="continue"
                 assert meta["reuse_ot_contexts"] and meta["rounds"]==4
                 fingerprints.append((meta["workload_sha256"],meta["q"]))
@@ -65,6 +66,24 @@ def main():
                 meta=json.loads((out/"metadata.json").read_text())
                 fingerprints.append((meta["workload_sha256"],meta["q"]))
             assert len(set(fingerprints))==1
+        # The public count-schedule CLI must also skip every empty batch by default.
+        for schedule in ("0,2,0,1","0,0,0,0"):
+            out=folder/f"schedule-{schedule}"
+            subprocess.run([sys.executable,str(launcher),"--binary",str(args.binary),
+                "--vertices","5","--edges","3","--insert-schedule",schedule,
+                "--repeat","1","--check","--port","22800","--out",str(out)],
+                check=True,timeout=120)
+            counts=list(map(int,schedule.split(',')))
+            meta=json.loads((out/"metadata.json").read_text())
+            assert meta["reinit_policy"]=="on_insert" and meta["correctness_checked"]
+            summary=read_csv(out/"summary.csv")
+            assert len([r for r in summary if r["phase"]=="init"])==1
+            assert len([r for r in summary if r["phase"]=="iter"])==len(counts)
+            for row in summary:
+                if row["phase"]=="reinit":
+                    changed=counts[int(row["round"])]>0
+                    assert (row["reinitialized"]=="True")==changed
+                    assert (float(row["median_total_bytes"])>0)==changed
         # Reject an insufficient insertion bound before launching parties.
         bad=subprocess.run([sys.executable,str(launcher),"--binary",str(args.binary),
             "--vertices","3","--edges","2","--rounds","2",

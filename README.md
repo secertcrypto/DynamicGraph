@@ -42,7 +42,7 @@ engine, with separate initialization and per-round measurements. See the
 For an insertion baseline that rebuilds the full Graphiti topology before
 iteration, use `benchmark/graphiti/run_rebuild.py --vertices 100 --edges 900
 --insert-schedule 0,10,0,10 --check`. It preserves vertex state and reports each
-reinitialization separately; `--reinit-policy on_insert` skips empty-batch rebuilds.
+reinitialization separately; the default `--reinit-policy on_insert` skips empty-batch rebuilds.
 
 ## Protocols
 

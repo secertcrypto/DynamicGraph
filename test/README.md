@@ -21,7 +21,8 @@ weighted-sum and reachability iterations, zero-edge and single-vertex graphs,
 the smallest application ring, warmups/repeats and byte accounting. When the
 dynamic benchmark is built, it also verifies matching workload metadata and
 per-round reference results for a run without insertions.
-`graphiti_rebuild_benchmark` checks both rebuild policies with inter-round
+`graphiti_rebuild_benchmark` checks default empty-batch skipping (including an
+all-zero schedule) and both explicit rebuild policies with inter-round
 insertions, continued vertex state, self-loops, parallel destinations, signed
 weights, unchanged rounds, and matching dynamic workloads for both applications.
 

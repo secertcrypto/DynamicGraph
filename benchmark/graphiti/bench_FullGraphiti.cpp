@@ -145,7 +145,7 @@ int main(int argc,char** argv) try {
         src.push_back(s);dst.push_back(d);data.push_back(w&encoding.value_mask());
     }
     const auto mode=in.value("graphiti_mode",std::string("static"));
-    const auto policy=in.value("reinit_policy",std::string("every_round"));
+    const auto policy=in.value("reinit_policy",std::string("on_insert"));
     if(mode!="static" && mode!="rebuild")throw std::invalid_argument("unknown Graphiti mode");
     if(policy!="every_round" && policy!="on_insert")throw std::invalid_argument("unknown reinit policy");
     const size_t rounds=in.at("rounds").size();

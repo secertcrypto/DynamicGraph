@@ -137,7 +137,7 @@ does not open the graph or reset application values to the initial fixture.
 ```bash
 cmake --build build --target bench_FullGraphiti bench_dynamic_graph -j4
 
-# Full Graphiti rebuild baseline: initialize, then (reinitialize, iterate).
+# Full Graphiti rebuild baseline: initialize, then rebuild on insertions and iterate.
 python3 benchmark/graphiti/run_rebuild.py \
   --vertices 100 --base-edges 900 --insert-schedule 0,10,0,10 \
   --application weighted_sum --max-delta 20 --seed 42 --repeat 3 --check
@@ -154,12 +154,15 @@ as the dynamic launcher. Without a schedule, the default is three rounds with
 one insertion per round. `--max-delta` defaults to the total insertion count.
 `V+E`, including every inserted edge, must stay at or below `2^22`.
 
-The default `--reinit-policy every_round` follows a literal rebuild-before-each-
-iteration baseline, including empty insertion batches. For a baseline that
-only rebuilds when topology changes, use `--reinit-policy on_insert`: an empty
-batch then produces a zero-communication `reinit` row and reuses the old state.
-The policy is recorded in metadata. Compare using `on_insert` when avoiding
-unnecessary rebuilds on unchanged snapshots is part of the baseline definition.
+The default `--reinit-policy on_insert` rebuilds only when the insertion batch
+is nonempty. For `--insert-schedule 0,2,0,1`, the graph is initialized once
+before the rounds, then rebuilt only in rounds 1 and 3 (zero-based). All four
+rounds still iterate, continuing from the previous vertex values. Empty batches
+produce a zero-communication `reinit` row with `reinitialized=False`; its time
+measures only the empty-batch check, not initialization.
+For an explicitly forced rebuild-before-every-iteration experiment, the legacy
+`--reinit-policy every_round` option remains available. The selected policy is
+recorded in metadata.
 
 Results go to `Results/graphiti_rebuild/`, with `init`, per-round `reinit` and
 `iter`, and `total` rows. `reinit` includes appending shares, sorting the full
